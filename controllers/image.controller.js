@@ -1,32 +1,31 @@
-const multerUpload = require("../multer.config");
-const Image = require('../models/Image');
+const fileSystem = require('fs');
+const upload = require("../multer.config");
 const imageCtrl = {};
 
 imageCtrl.addImage = async (req, res, next) => {
-    multerUpload(req, res, function (err) {
-        const file = req.body;
+    upload(req, res, function (err) {
+        const file = req.file;
         if(file == null || file == undefined || file == ""){ 
             next();
         }else{
             if (err) {
                 console.log(err);
             }else{
-                console.log(file);
-                let image = new Image();
-                console.log('filename: '+file.filename);
-                console.log('name: '+file.name);
-                image.image = file.filename;
-                image.save( (image)=> {
-                    if(err){
-                        console.log(err);
-                    }else{  
-                        console.log('Imagem salva');
-                        res.json(image);
-                    }
-                });
+                res.json(file);
             }
         }
     });
+}
+
+imageCtrl.getImage = async (req, res, next) => {    
+    var filePath = 'uploads/'+req.params.filename;
+    var stat = fileSystem.statSync(filePath);
+    res.writeHead(200, {
+        'Content-Type': 'image/png',
+        'Content-Length': stat.size
+    });
+    var readStream = fileSystem.createReadStream(filePath);
+    readStream.pipe(res);
 }
 
 
