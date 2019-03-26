@@ -17,15 +17,18 @@ imageCtrl.addImage = async (req, res, next) => {
     });
 }
 
-imageCtrl.getImage = async (req, res, next) => {    
-    var filePath = 'uploads/'+req.params.filename;
-    var stat = fileSystem.statSync(filePath);
-    res.writeHead(200, {
-        'Content-Type': 'image/png',
-        'Content-Length': stat.size
-    });
-    var readStream = fileSystem.createReadStream(filePath);
-    readStream.pipe(res);
+imageCtrl.getImage = async (req, res, next) => {
+    var filePath = 'uploads/' + req.params.filename;
+    if(req.params.mimetype == 'image'){
+        res.writeHead(200, {
+            'Content-Type': req.params.mimetype+'/'+req.params.imtype,
+            'Content-Length': req.params.size
+        });
+        var readStream = fileSystem.createReadStream(filePath);
+        readStream.pipe(res);
+    } else {
+        res.download(filePath);
+    }    
 }
 
 
