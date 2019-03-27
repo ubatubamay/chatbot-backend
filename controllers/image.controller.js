@@ -5,7 +5,7 @@ const imageCtrl = {};
 imageCtrl.addImage = async (req, res, next) => {
     upload(req, res, function (err) {
         const file = req.file;
-        if(file == null || file == undefined || file == ""){ 
+        if(file == null || file == undefined || file == ""){
             next();
         }else{
             if (err) {
