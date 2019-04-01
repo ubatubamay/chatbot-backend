@@ -70,19 +70,6 @@ io.on('connection', socket => {
     })
   })
 
-  // Terminar de implementar
-  socket.on('join', (data) => {
-    socket.nickname = data.nickName
-    users[socket.nickname] = socket
-
-    let userObj = {
-        nickName: data.nickName,
-        socketId: socket.id
-    }
-    users.push(userObj)
-    io.emit('onlineUsers', users)
-  })
-
   socket.on('disconnect',() =>{
     console.log('new desconnection made')
   })
